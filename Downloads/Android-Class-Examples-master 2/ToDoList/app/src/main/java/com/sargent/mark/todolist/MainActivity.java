@@ -23,6 +23,8 @@ import android.widget.Spinner;
 import com.sargent.mark.todolist.data.Contract;
 import com.sargent.mark.todolist.data.DBHelper;
 
+import static com.sargent.mark.todolist.R.id.recyclerView;
+
 public class MainActivity extends AppCompatActivity implements AddToDoFragment.OnDialogCloseListener, UpdateToDoFragment.OnUpdateDialogCloseListener,AdapterView.OnItemSelectedListener {
 
     private RecyclerView rv;
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements AddToDoFragment.O
                 frag.show(fm, "addtodofragment");
             }
         });
-        rv = (RecyclerView) findViewById(R.id.recyclerView);
+        rv = (RecyclerView) findViewById(recyclerView);
         rv.setLayoutManager(new LinearLayoutManager(this));
     }
 
@@ -81,7 +83,20 @@ public class MainActivity extends AppCompatActivity implements AddToDoFragment.O
                 UpdateToDoFragment frag = UpdateToDoFragment.newInstance(year, month, day, description, category, id);
                 frag.show(fm, "updatetodofragment");
             }
-        });
+        }
+//               new ToDoListAdapter.ItemLongClickListner()
+//        {
+//            @Override
+//            public void onItemLongClick(int pos, long id, boolean done) {
+//
+//                Log.d(TAG, "item long click id: " + id);
+//                ContentValues cv = new ContentValues();
+//                cv.put(Contract.TABLE_TODO.COLUMN_NAME_DONE, (done ? 1 : 0));
+//                db.update(Contract.TABLE_TODO.TABLE_NAME, cv, Contract.TABLE_TODO._ID + "=" + id, null);
+//            }
+
+
+         );
 
         rv.setAdapter(adapter);
 
@@ -170,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements AddToDoFragment.O
         Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
         spinner.setOnItemSelectedListener(this);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.menu_iten_todo_category_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.menu_item_todo_category_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner.setAdapter(adapter);
@@ -193,12 +208,12 @@ public class MainActivity extends AppCompatActivity implements AddToDoFragment.O
     }
     public void onNothingSelected(AdapterView<?> parent){
 
+
     }
     //GET TODO FROM DABABASE ON CATEGORY SELECTED
 
     private Cursor getItemsForCategory(SQLiteDatabase db, String category){
-        return
-                db.query(Contract.TABLE_TODO.TABLE_NAME,null,
+        return db.query(Contract.TABLE_TODO.TABLE_NAME,null,
                         Contract.TABLE_TODO.COLUMN_NAME_CATEGORY + "='" + category + "'", null,null,null,Contract.TABLE_TODO.COLUMN_NAME_DUE_DATE);
     }
 }

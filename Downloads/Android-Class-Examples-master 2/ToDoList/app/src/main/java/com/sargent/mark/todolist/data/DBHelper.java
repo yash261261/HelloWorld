@@ -12,7 +12,7 @@ import android.util.Log;
 public class DBHelper extends SQLiteOpenHelper{
 
     private static final int DATABASE_VERSION = 2;
-    private static final String DATABASE_NAME = "yashitems.db";
+    private static final String DATABASE_NAME = "yash.db";
     private static final String TAG = "dbhelper";
 
     public DBHelper(Context context) {
@@ -21,22 +21,19 @@ public class DBHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String queryString = "CREATE TABLE " + Contract.TABLE_TODO.TABLE_NAME + " ("+
-                Contract.TABLE_TODO._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+        String queryString = " CREATE TABLE " + Contract.TABLE_TODO.TABLE_NAME + " ("+
+                Contract.TABLE_TODO._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 Contract.TABLE_TODO.COLUMN_NAME_DESCRIPTION + " TEXT NOT NULL, " +
-                Contract.TABLE_TODO.COLUMN_NAME_DUE_DATE + " DATE ," +
-                Contract.TABLE_TODO.COLUMN_NAME_CATEGORY + "TEXT NOT NULL," +
-                Contract.TABLE_TODO.COLUMN_NAME_DONE + "INTEGER NOT NULL DEFAULT 0);";
+                Contract.TABLE_TODO.COLUMN_NAME_DUE_DATE + " DATE, " +
+                Contract.TABLE_TODO.COLUMN_NAME_CATEGORY + " TEXT NOT NULL); ";
 
 
-
-
-
-        Log.d(TAG, "Create table SQL: " + queryString);
+        Log.d(TAG, " Create table SQL: " + queryString);
         db.execSQL(queryString);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // db.execSQL("drop table" + Contract.TABLE_TODO.TABLE_NAME + "if exists;");
     }
 }

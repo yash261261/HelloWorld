@@ -22,7 +22,7 @@ public class AddToDoFragment extends DialogFragment{
     private EditText toDo;
     private DatePicker dp;
     private Button add;
-    private Spinner s;
+    private Spinner categorySpinner;
     private ArrayAdapter<CharSequence> AdapterSpin;
 
     private final String TAG = "addtodofragment";
@@ -45,11 +45,11 @@ public class AddToDoFragment extends DialogFragment{
 
         //Start spinner from layout
 
-        s= (Spinner) view.findViewById(R.id.s);
+        categorySpinner= (Spinner) view.findViewById(R.id.categorySpinner);
        AdapterSpin=ArrayAdapter.createFromResource(this.getContext(),R.array.todo_category_array, android.R.layout.simple_spinner_item);
 
         AdapterSpin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        s.setAdapter(AdapterSpin);
+        categorySpinner.setAdapter(AdapterSpin);
 
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
@@ -63,7 +63,9 @@ public class AddToDoFragment extends DialogFragment{
             public void onClick(View v) {
                 OnDialogCloseListener activity = (OnDialogCloseListener) getActivity();
                 // Passing category
-                activity.closeDialog(dp.getYear(), dp.getMonth(), dp.getDayOfMonth(), toDo.getText().toString(),s.getSelectedItem().toString());
+                activity.closeDialog(dp.getYear(), dp.getMonth(),
+                        dp.getDayOfMonth(), toDo.getText().toString(),
+                        categorySpinner.getSelectedItem().toString());
                 AddToDoFragment.this.dismiss();
             }
         });

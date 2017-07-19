@@ -12,8 +12,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import static android.R.attr.category;
-
 /**
  * Created by mark on 7/5/17.
  */
@@ -24,7 +22,7 @@ public class UpdateToDoFragment extends DialogFragment {
     private DatePicker dp;
     private Button add;
     // UPDATE SPINNER COMPONENT
-    private Spinner s;
+    private Spinner categorySpinner;
     private ArrayAdapter<CharSequence> AdapterSpin;
     private final String TAG = "updatetodofragment";
     private long id;
@@ -32,7 +30,7 @@ public class UpdateToDoFragment extends DialogFragment {
 
     public UpdateToDoFragment(){}
 
-    public static UpdateToDoFragment newInstance(int year, int month, int day, String descrpition, String category, long id) {
+    public static UpdateToDoFragment newInstance(int year, int month, int day, String description, String category, long id) {
         UpdateToDoFragment f = new UpdateToDoFragment();
 
         // Supply num input as an argument.
@@ -41,7 +39,7 @@ public class UpdateToDoFragment extends DialogFragment {
         args.putInt("month", month);
         args.putInt("day", day);
         args.putLong("id", id);
-        args.putString("description", descrpition);
+        args.putString("description", description);
         // Add Category
         args.putString("category", category);
         f.setArguments(args);
@@ -63,10 +61,10 @@ public class UpdateToDoFragment extends DialogFragment {
 
         //Start spinner from layout
 
-        s=(Spinner) view.findViewById(R.id.s);
+        categorySpinner=(Spinner) view.findViewById(R.id.categorySpinner);
         AdapterSpin=ArrayAdapter.createFromResource(this.getContext(),R.array.todo_category_array,android.R.layout.simple_spinner_item);
         AdapterSpin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        s.setAdapter(AdapterSpin);
+        categorySpinner.setAdapter(AdapterSpin);
 
 
         int year = getArguments().getInt("year");
@@ -89,7 +87,7 @@ public class UpdateToDoFragment extends DialogFragment {
                 Log.d(TAG, "id: " + id);
                 // PASSING CATEGORY
 
-                activity.closeUpdateDialog(dp.getYear(), dp.getMonth(), dp.getDayOfMonth(), toDo.getText().toString(), s.getSelectedItem().toString(), id);
+                activity.closeUpdateDialog(dp.getYear(), dp.getMonth(), dp.getDayOfMonth(), toDo.getText().toString(), categorySpinner.getSelectedItem().toString(), id);
                 UpdateToDoFragment.this.dismiss();
             }
         });
@@ -100,7 +98,7 @@ public class UpdateToDoFragment extends DialogFragment {
 
         int categoryPos=AdapterSpin.getPosition(category);
 
-        s.setSelection(categoryPos);
+        categorySpinner.setSelection(categoryPos);
         return view;
     }
 }
