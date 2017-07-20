@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements AddToDoFragment.O
 
     private RecyclerView rv;
     private FloatingActionButton button;
-    private DBHelper helper;
+    private static DBHelper helper;
     private Cursor cursor;
     private SQLiteDatabase db;
     ToDoListAdapter adapter;
@@ -60,62 +60,78 @@ public class MainActivity extends AppCompatActivity implements AddToDoFragment.O
         if (cursor != null) cursor.close();
     }
 
-    @Override
-    protected void onStart() {
+    @Override protected void onStart() {
+
         super.onStart();
 
+
+
         helper = new DBHelper(this);
+
         db = helper.getWritableDatabase();
+
         cursor = getAllItems(db);
 
-        adapter = new ToDoListAdapter(cursor, new ToDoListAdapter.ItemClickListener() {
-
-            @Override
-            public void onItemClick(int pos, String description, String duedate, String category, long id) {
-                Log.d(TAG, "item click id: " + id);
-                String[] dateInfo = duedate.split("-");
-                int year = Integer.parseInt(dateInfo[0].replaceAll("\\s", ""));
-                int month = Integer.parseInt(dateInfo[1].replaceAll("\\s", ""));
-                int day = Integer.parseInt(dateInfo[2].replaceAll("\\s", ""));
-
-                FragmentManager fm = getSupportFragmentManager();
-
-                UpdateToDoFragment frag = UpdateToDoFragment.newInstance(year, month, day, description, category, id);
-                frag.show(fm, "updatetodofragment");
-            }
-        }
-//               new ToDoListAdapter.ItemLongClickListner()
-//        {
-//            @Override
-//            public void onItemLongClick(int pos, long id, boolean done) {
-//
-//                Log.d(TAG, "item long click id: " + id);
-//                ContentValues cv = new ContentValues();
-//                cv.put(Contract.TABLE_TODO.COLUMN_NAME_DONE, (done ? 1 : 0));
-//                db.update(Contract.TABLE_TODO.TABLE_NAME, cv, Contract.TABLE_TODO._ID + "=" + id, null);
-//            }
 
 
-         );
+        adapter = new ToDoListAdapter(cursor,
+
+                new ToDoListAdapter.ItemClickListener() {
+
+
+
+                    @Override public void onItemClick(int pos, String description, String duedate, String category, long id) {
+
+                        Log.d(TAG, "item click id: " + id);
+                        String[] dateInfo = duedate.split("-");
+                        int year = Integer.parseInt(dateInfo[0].replaceAll("\\s", ""));
+                        int month = Integer.parseInt(dateInfo[1].replaceAll("\\s", ""));
+                        int day = Integer.parseInt(dateInfo[2].replaceAll("\\s", ""));
+
+
+
+                        FragmentManager fm = getSupportFragmentManager();
+                        UpdateToDoFragment frag = UpdateToDoFragment.newInstance(year,
+
+                                month, day, description, category, id);
+
+                        frag.show(fm, "updatetodofragment");
+
+                    }
+
+                });
 
         rv.setAdapter(adapter);
 
+
+
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+
+
+            @Override public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+
                 return false;
+
             }
 
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+
+
+            @Override public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+
                 long id = (long) viewHolder.itemView.getTag();
+
                 Log.d(TAG, "passing id: " + id);
+
                 removeToDo(db, id);
+
                 adapter.swapCursor(getAllItems(db));
             }
+
         }).attachToRecyclerView(rv);
+
     }
+
 
     @Override
     public void closeDialog(int year, int month, int day, String description, String category) {
@@ -215,5 +231,15 @@ public class MainActivity extends AppCompatActivity implements AddToDoFragment.O
     private Cursor getItemsForCategory(SQLiteDatabase db, String category){
         return db.query(Contract.TABLE_TODO.TABLE_NAME,null,
                         Contract.TABLE_TODO.COLUMN_NAME_CATEGORY + "='" + category + "'", null,null,null,Contract.TABLE_TODO.COLUMN_NAME_DUE_DATE);
+    }
+
+    public static void updatetodostatus(int pos, long id, boolean done) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(Contract.TABLE_TODO.COLUMN_NAME_DONE, (done ? 1 : 0));
+
+        db.update(Contract.TABLE_TODO.TABLE_NAME, cv,
+
+                Contract.TABLE_TODO._ID + "=" + id, null);
     }
 }

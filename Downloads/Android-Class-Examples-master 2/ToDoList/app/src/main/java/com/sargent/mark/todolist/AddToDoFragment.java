@@ -62,7 +62,7 @@ public class AddToDoFragment extends DialogFragment{
             @Override
             public void onClick(View v) {
                 OnDialogCloseListener activity = (OnDialogCloseListener) getActivity();
-                // Passing category
+                // PASSING CATEGORY TO LISTENER
                 activity.closeDialog(dp.getYear(), dp.getMonth(),
                         dp.getDayOfMonth(), toDo.getText().toString(),
                         categorySpinner.getSelectedItem().toString());

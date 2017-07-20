@@ -33,7 +33,6 @@ public class UpdateToDoFragment extends DialogFragment {
     public static UpdateToDoFragment newInstance(int year, int month, int day, String description, String category, long id) {
         UpdateToDoFragment f = new UpdateToDoFragment();
 
-        // Supply num input as an argument.
         Bundle args = new Bundle();
         args.putInt("year", year);
         args.putInt("month", month);
@@ -48,6 +47,8 @@ public class UpdateToDoFragment extends DialogFragment {
     }
 
     //To have a way for the activity to get the data from the dialog
+
+
     public interface OnUpdateDialogCloseListener {
         void closeUpdateDialog(int year, int month, int day, String description, String category, long id);
     }
@@ -74,6 +75,8 @@ public class UpdateToDoFragment extends DialogFragment {
         String description = getArguments().getString("description");
 
         //Show category in update dialog box
+
+
         String category=getArguments().getString("category");
         dp.updateDate(year, month, day);
 
@@ -92,12 +95,7 @@ public class UpdateToDoFragment extends DialogFragment {
             }
         });
 
-
-        //Select category of item being edited
-
-
         int categoryPos=AdapterSpin.getPosition(category);
-
         categorySpinner.setSelection(categoryPos);
         return view;
     }

@@ -8,7 +8,6 @@
         android:id="@+id/categoryMenuItem"
         android:title="@string/menu_title"
         app:actionViewClass="android.widget.Spinner"
-
         app:showAsAction="always"
         tools:context=".MainActivity">
 

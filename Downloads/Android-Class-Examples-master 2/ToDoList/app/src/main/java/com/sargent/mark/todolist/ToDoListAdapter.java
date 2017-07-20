@@ -2,11 +2,13 @@ package com.sargent.mark.todolist;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.sargent.mark.todolist.data.Contract;
@@ -18,7 +20,6 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ItemHo
 
     private Cursor cursor;
     private ItemClickListener listener;
-   // private ItemLongClickListener longClickListener;
     private String TAG = "todolistadapter";
 
     @Override
@@ -47,19 +48,16 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ItemHo
     }
 
 
-
-//    public interface ItemLongClickListner{
-//        void onItemLongClick(int pos, long id, boolean done);
-//    }
-
     public ToDoListAdapter(Cursor cursor, ItemClickListener listener) {
+
         this.cursor = cursor;
+
         this.listener = listener;
-    //    this.longClickListener= longClickListener;
-      //  ItemLongClickListener longClickListener
+
+
     }
 
-    public void swapCursor(Cursor newCursor){
+    public void swapCursor(Cursor newCursor) {
         if (cursor != null) cursor.close();
         cursor = newCursor;
         if (newCursor != null) {
@@ -70,13 +68,13 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ItemHo
 
     class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-      //  ItemLongClickListener longClickListener
         TextView descr;
         TextView due;
         String duedate;
         String description;
         String category;
         TextView cat;
+        Button b;
         long id;
         boolean done;
 
@@ -85,93 +83,81 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ItemHo
             super(view);
             descr = (TextView) view.findViewById(R.id.description);
             due = (TextView) view.findViewById(R.id.dueDate);
-            cat=(TextView) view.findViewById(R.id.category);
+            cat = (TextView) view.findViewById(R.id.category);
+            b = (Button) view.findViewById(R.id.checkbox);
             view.setOnClickListener(this);
-         //   view.setOnLongClickListener(this);
         }
 
         public void bind(ItemHolder holder, int pos) {
             cursor.moveToPosition(pos);
             id = cursor.getLong(cursor.getColumnIndex(Contract.TABLE_TODO._ID));
             Log.d(TAG, "deleting id: " + id);
+            setItemBackgroundBasedOnDoneStatus();
+
 
             duedate = cursor.getString(cursor.getColumnIndex(Contract.TABLE_TODO.COLUMN_NAME_DUE_DATE));
             description = cursor.getString(cursor.getColumnIndex(Contract.TABLE_TODO.COLUMN_NAME_DESCRIPTION));
             category = cursor.getString(cursor.getColumnIndex(Contract.TABLE_TODO.COLUMN_NAME_CATEGORY));
-           //  done=cursor.getInt(cursor.getColumnIndex(Contract.TABLE_TODO.COLUMN_NAME_DONE)) == 1;
+            done = cursor.getInt(cursor.getColumnIndex(Contract.TABLE_TODO.COLUMN_NAME_DONE)) == 1;
             descr.setText(description);
             due.setText(duedate);
             cat.setText("Category: " + category);
 
-            holder.itemView.setTag(id);
 
-        //    setItemBackgroundBasedOnDoneStatus();
+            holder.itemView.setTag(id);
+            setItemBackgroundBasedOnDoneStatus();
+
+            // On Click change the status to Done/Undone
+
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = getAdapterPosition();
+                    done = !done;
+                    Log.d(TAG, "Value is-------" + done);
+
+                    setItemBackgroundBasedOnDoneStatus();
+                    MainActivity.updatetodostatus(pos, id, done);
+
+                }
+            });
+
+
         }
 
+        private void setItemBackgroundBasedOnDoneStatus() {
+            if (done) {
+                descr.setPaintFlags(descr.getPaintFlags() |
+                        Paint.STRIKE_THRU_TEXT_FLAG);
+
+                due.setPaintFlags(due.getPaintFlags() |
+
+                        Paint.STRIKE_THRU_TEXT_FLAG);
+
+                cat.setPaintFlags(cat.getPaintFlags() |
+
+                        Paint.STRIKE_THRU_TEXT_FLAG);
 
 
+            } else {
+                descr.setPaintFlags(descr.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
 
+                due.setPaintFlags(due.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
 
-
-
+                cat.setPaintFlags(cat.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG
+                );
+            }
+        }
 
 
         @Override
         public void onClick(View v) {
-
             int pos = getAdapterPosition();
+            listener.onItemClick(pos,description,duedate,category,id);
 
-            listener.onItemClick(pos, description, duedate, category, id);
-
-            
         }
-        
-        
-//        @Override public boolean onLongClick(View v){
-//            Toast.makeText(v.getContext(), "Long Press To Mark Done/Undone", Toast.LENGTH_SHORT).show();
-//            int pos=getAdapterPosition();
-//
-//            done=!done;
-//            setItemBackgroundBasedOnDoneStatus();
-//            longClickListener.onItemLongClick(pos,id,done);
-//            return true;
-//
-//        }
-//
-//         private void setItemBackgroundBasedOnDoneStatus(){
-//            if(done){
-//                descr.setPaintFlags(descr.getPaintFlags() |
-//                Paint.STRIKE_THRU_TEXT_FLAG);
-//
-//                due.setPaintFlags(due.getPaintFlags() |
-//
-//                        Paint.STRIKE_THRU_TEXT_FLAG);
-//
-//                cat.setPaintFlags(cat.getPaintFlags() |
-//
-//                            Paint.STRIKE_THRU_TEXT_FLAG);
-//
-//
-//            }
-//            else
-//            {
-//                descr.setPaintFlags(descr.getPaintFlags() &
-//
-//                        Paint.STRIKE_THRU_TEXT_FLAG);
-//
-//                due.setPaintFlags(due.getPaintFlags()  &
-//
-//                        Paint.STRIKE_THRU_TEXT_FLAG);
-//
-//                cat.setPaintFlags(cat.getPaintFlags() &
-//
-//
-//              Paint.STRIKE_THRU_TEXT_FLAG
-//                );
-//            }
-//        }
-
-
     }
 
 }
+
+

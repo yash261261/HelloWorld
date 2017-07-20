@@ -8,19 +8,35 @@
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:text="To do description"/>
+        android:textSize="32dp"
+        android:text="To do description"
+        android:textStyle="bold"
+        android:textColor="#020202" />
 
     <TextView
         android:id="@+id/dueDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14dp"
-        android:text="06-04-2017"/>
+        android:textSize="20dp"
+        android:text="06-04-2017"
+        android:textStyle="bold"
+        android:textColor="#e80909"/>
 
    <TextView
        android:id="@+id/category"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:textSize="14dp"/>
+       android:textSize="20dp"
+       android:textColor="#ffffff" />
+
+    // button for Done/Undone
+
+    <Button
+        android:text="Click"
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#ffffff"
+        android:textColor="#c13434"/>
+
 </LinearLayout>
